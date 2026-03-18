@@ -33,7 +33,21 @@ def admin_login():
 @auth_bp.route('/admin/dashboard')
 def admin_dashboard():
     if 'user_type' in session and session['user_type'] == 'admin':
-        return render_template('dashboard/admin_dashboard.html', user_name=session.get('user_name'))
+        # Fetch platform settings from database or use defaults
+        try:
+            conn = config.get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM platform_settings LIMIT 1")
+            platform_settings = cursor.fetchone()
+            cursor.close()
+            conn.close()
+        except Exception as e:
+            # If table doesn't exist or error occurs, use default empty settings
+            platform_settings = {'platform_logo': None, 'platform_name': 'Rohidas Footwear'}
+        
+        return render_template('dashboard/admin_dashboard.html', 
+                             user_name=session.get('user_name'),
+                             platform_settings=platform_settings)
     return redirect(url_for('auth.admin_login'))
 
 # Shop Login Routes

@@ -7,7 +7,13 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="#">
-            <i class="fas fa-user-shield me-2"></i>Admin Dashboard
+            {% if platform_settings.platform_logo %}
+                <img src="{{ url_for('static', filename='uploads/platform/' + platform_settings.platform_logo) }}" 
+                     alt="{{ platform_settings.platform_name }}" style="height: 35px;" class="me-2">
+            {% else %}
+                <i class="fas fa-user-shield me-2"></i>
+            {% endif %}
+            Admin Dashboard
         </a>
         <div class="ms-auto">
             <span class="text-white me-3">Welcome, {{ user_name }}</span>
@@ -36,7 +42,7 @@
                     <a class="nav-link" href="#"><i class="fas fa-chart-bar me-2"></i>Reports</a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a class="nav-link" href="#"><i class="fas fa-cog me-2"></i>Settings</a>
+                    <a class="nav-link" href="{{ url_for('admin.platform_settings') }}"><i class="fas fa-cog me-2"></i>Settings</a>
                 </li>
             </ul>
         </div>

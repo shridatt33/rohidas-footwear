@@ -320,3 +320,88 @@ def delete_shop(id):
         flash(f'Error deleting shop: {str(e)}', 'error')
     
     return redirect(url_for('admin.list_shops'))
+
+
+# Platform Settings Routes
+@admin_bp.route('/settings', methods=['GET', 'POST'])
+@admin_required
+def platform_settings():
+    """Manage platform-wide settings"""
+    conn = config.get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    if request.method == 'POST':
+        platform_name = request.form.get('platform_name', '').strip()
+        platform_logo = request.files.get('platform_logo')
+        
+        try:
+            # Check if settings exist
+            cursor.execute("SELECT * FROM platform_settings LIMIT 1")
+            existing = cursor.fetchone()
+            
+            # Handle logo upload
+            logo_filename = None
+            if platform_logo and platform_logo.filename:
+                import os
+                from werkzeug.utils import secure_filename
+                import time
+                
+                # Create upload directory if it doesn't exist
+                upload_dir = 'static/uploads/platform'
+                os.makedirs(upload_dir, exist_ok=True)
+                
+                # Generate unique filename
+                filename = secure_filename(platform_logo.filename)
+                timestamp = int(time.time())
+                logo_filename = f"{timestamp}_{filename}"
+                platform_logo.save(os.path.join(upload_dir, logo_filename))
+            
+            if existing:
+                # Update existing settings
+                if logo_filename:
+                    cursor.execute("""
+                        UPDATE platform_settings 
+                        SET platform_name=%s, platform_logo=%s
+                        WHERE id=%s
+                    """, (platform_name, logo_filename, existing['id']))
+                else:
+                    cursor.execute("""
+                        UPDATE platform_settings 
+                        SET platform_name=%s
+                        WHERE id=%s
+                    """, (platform_name, existing['id']))
+            else:
+                # Create new settings
+                cursor.execute("""
+                    INSERT INTO platform_settings (platform_name, platform_logo)
+                    VALUES (%s, %s)
+                """, (platform_name, logo_filename))
+            
+            conn.commit()
+            flash('Platform settings updated successfully!', 'success')
+            return redirect(url_for('admin.platform_settings'))
+            
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error updating settings: {str(e)}', 'error')
+        finally:
+            cursor.close()
+            conn.close()
+    
+    # GET request - load settings
+    try:
+        cursor.execute("SELECT * FROM platform_settings LIMIT 1")
+        settings = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if not settings:
+            settings = {'platform_name': 'Rohidas Footwear', 'platform_logo': None}
+        
+        return render_template('admin/platform_settings.html', settings=settings)
+    except Exception as e:
+        cursor.close()
+        conn.close()
+        # If table doesn't exist, show form with defaults
+        settings = {'platform_name': 'Rohidas Footwear', 'platform_logo': None}
+        return render_template('admin/platform_settings.html', settings=settings)

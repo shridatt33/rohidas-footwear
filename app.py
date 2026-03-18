@@ -10,6 +10,17 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
 
+# Optional: Set SERVER_NAME for absolute URL generation
+if config.SERVER_NAME:
+    app.config['SERVER_NAME'] = config.SERVER_NAME
+
+# Context processor to make base_url available in all templates
+@app.context_processor
+def inject_base_url():
+    return {
+        'base_url': config.BASE_URL
+    }
+
 # Register Blueprints
 app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
@@ -19,4 +30,4 @@ app.register_blueprint(marketing_bp)
 app.register_blueprint(public_bp)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='127.0.0.1', port=8000)

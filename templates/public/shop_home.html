@@ -16,9 +16,9 @@
         .nav-link:hover { color: #198754 !important; background: #e9f7ef; }
         .hero-section { background: linear-gradient(120deg, #e9f7ef 0%, #f6f8fb 100%); border-radius: 0 0 40px 40px; box-shadow: 0 8px 32px rgba(25,135,84,0.04); margin-bottom: 2rem; }
         .hero-content { padding: 70px 0 60px 0; }
-        .hero-title { font-size: 2.8rem; font-weight: 800; color: #222; margin-bottom: 18px; letter-spacing: -1px; }
+        .hero-title { font-size: 2.2rem; font-weight: 800; color: #8B0000; margin-bottom: 18px; letter-spacing: -1px; }
         .hero-subtitle { font-size: 1.18rem; color: #5e6e82; margin-bottom: 32px; line-height: 1.7; }
-        .hero-img { border-radius: 24px; box-shadow: 0 12px 40px rgba(25,135,84,0.10); width: 100%; height: 420px; object-fit: cover; background: #e9ecef; }
+        .hero-img { border-radius: 15px; box-shadow: 0 12px 40px rgba(25,135,84,0.10); width: 100%; height: auto; max-width: 100%; object-fit: contain; background: transparent; }
         .btn-shop, .btn-categories { background: linear-gradient(90deg, #198754 60%, #43e97b 100%); color: white; padding: 13px 36px; border-radius: 50px; font-weight: 700; border: none; transition: all 0.2s; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(25,135,84,0.10); margin-right: 10px; }
         .btn-shop:hover, .btn-categories:hover { background: linear-gradient(90deg, #146c43 60%, #198754 100%); transform: translateY(-2px) scale(1.03); }
         .features-row { margin-top: -40px; z-index: 2; position: relative; }
@@ -78,14 +78,18 @@
         <section class="hero-section" id="home">
             <div class="container hero-content">
                 <div class="row align-items-center">
-                    <div class="col-lg-6 mb-4 mb-lg-0">
-                        <h1 class="hero-title">Premium Footwear Collection</h1>
-                        <p class="hero-subtitle">Step into comfort and style with Rohidas Footwear</p>
-                        <a href="#featured" class="btn btn-shop me-2">Shop Now</a>
+                    <div class="col-lg-5 mb-4 mb-lg-0">
+                        <h1 class="hero-title">श्री संत रोहिदास फुटवेअर & कोल्हापुरी हाऊस</h1>
+                        <p class="hero-subtitle">आमच्याकडे सर्व प्रकारचे चप्पल, बूट बनून भेटेल</p>
+                        <div class="mb-4">
+                            <h5 class="text-success"><i class="fas fa-phone me-2"></i>प्रो.प्रा - श्री.नारायण काबळे</h5>
+                            <h4 class="text-dark mt-2"><strong>९०१९१९०८४०</strong></h4>
+                        </div>
+                        <a href="tel:9019190840" class="btn btn-shop me-2"><i class="fas fa-phone me-2"></i>Call Now</a>
                         <a href="#categories" class="btn btn-categories">View Categories</a>
                     </div>
-                    <div class="col-lg-6 text-center">
-                        <img src="https://images.unsplash.com/photo-1517263904808-5dc0d6d3fa5c?auto=format&fit=crop&w=600&q=80" alt="Shoes Banner" class="hero-img">
+                    <div class="col-lg-7">
+                        <img src="{{ url_for('static', filename='images/shop.jpeg') }}" alt="Rohidas Footwear Banner" class="hero-img">
                     </div>
                 </div>
             </div>
@@ -228,8 +232,9 @@
                     </div>
                     <div class="col-md-4">
                         <div class="footer-title">Contact</div>
-                        <div class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> {{ shop.address or 'Pune, Maharashtra' }}</div>
-                        <div class="mb-2"><i class="fas fa-phone me-2"></i> {{ shop.phone or '+91 1234567890' }}</div>
+                        <div class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>कल्याण हावरे मार्केटी सुद्धुकी शोरूम रोजारी आठेफाटा ता.जुजर जि.पुणे</div>
+                        <div class="mb-2"><i class="fas fa-phone me-2"></i>प्रो.प्रा - श्री.नारायण काबळे</div>
+                        <div class="mb-2"><a href="tel:9019190840" class="text-white text-decoration-none"><strong>९०१९१९०८४०</strong></a></div>
                         <div class="mb-2"><i class="fas fa-envelope me-2"></i> {{ shop.email or 'info@rohidasfootwear.com' }}</div>
                         <div class="mt-3">
                             <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>

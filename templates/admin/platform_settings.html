@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Platform Settings - Admin Dashboard{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('auth.admin_dashboard') }}">
+            <i class="fas fa-user-shield me-2"></i>Admin Dashboard
+        </a>
+        <div class="ms-auto">
+            <span class="text-white me-3">Welcome, {{ session.get('user_name') }}</span>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-light btn-sm">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 bg-light min-vh-100 p-3">
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{{ url_for('auth.admin_dashboard') }}"><i class="fas fa-home me-2"></i>Dashboard</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="#"><i class="fas fa-users me-2"></i>Users</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="{{ url_for('admin.list_shops') }}"><i class="fas fa-store me-2"></i>Shops</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="#"><i class="fas fa-chart-bar me-2"></i>Reports</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link active" href="{{ url_for('admin.platform_settings') }}"><i class="fas fa-cog me-2"></i>Settings</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Platform Settings</h2>
+                <a href="{{ url_for('auth.admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="platform_name" class="form-label">Platform Name</label>
+                                    <input type="text" class="form-control" id="platform_name" name="platform_name" 
+                                           value="{{ settings.platform_name }}" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="platform_logo" class="form-label">Platform Logo</label>
+                                    <input type="file" class="form-control" id="platform_logo" name="platform_logo" accept="image/*">
+                                    <small class="text-muted">Leave empty to keep current logo</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if settings.platform_logo %}
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Current Logo</label>
+                                <div>
+                                    <img src="{{ url_for('static', filename='uploads/platform/' + settings.platform_logo) }}" 
+                                         alt="Platform Logo" style="max-height: 100px;" class="border rounded p-2">
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save me-2"></i>Save Settings
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Database Information</h5>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> If the platform_settings table doesn't exist in your database, 
+                        it will be created automatically when you save settings for the first time.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
